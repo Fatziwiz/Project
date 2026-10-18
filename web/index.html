@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dialog — тренировка и анализ коммуникации</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <aside>
+    <a class="brand" href="/">◈ dialog<span>RESEARCH LAB</span></a>
+    <nav aria-label="Основная навигация">
+      <a class="active" href="#workspace">◫ Рабочая область</a>
+      <a href="#training">◉ Голосовая тренировка</a>
+      <a href="#method">◎ Методология</a>
+    </nav>
+    <div class="aside-bottom">Дипломный проект<br><strong>Мультимодальная коммуникация</strong><p>Исследовательский прототип · v0.2</p></div>
+  </aside>
+  <main id="workspace">
+    <header><span>Лаборатория анализа коммуникации</span><span class="badge">Исследовательский прототип</span></header>
+    <section class="intro">
+      <div class="eyebrow">РЕЧЬ · ГОЛОС · ДВИЖЕНИЕ</div>
+      <h1>Тренируйте речь.<br><em>Находите свой голос.</em></h1>
+      <p>Подготовьтесь к выступлению, собеседованию или защите диплома. Запишите ответ, добавьте расшифровку и получите рекомендации по тексту.</p>
+    </section>
+    <div class="steps" aria-label="Этапы работы"><span class="selected">01 <b>Выберите упражнение</b></span><span>02 <b>Запишите ответ</b></span><span>03 <b>Получите отчёт</b></span></div>
+
+    <section id="training" class="card training" aria-labelledby="training-title">
+      <div class="card-title"><div><div class="eyebrow">ПРАКТИКА ВСЛУХ</div><h2 id="training-title">Голосовая тренировка</h2></div><span class="pill">Управляемое упражнение</span></div>
+      <p class="section-description">Система озвучит заранее подготовленное задание. Запишите свой ответ и послушайте его перед анализом. Свободный диалог с AI пока не подключён.</p>
+      <div class="training-grid">
+        <div>
+          <label for="scenario">Сценарий тренировки</label>
+          <select id="scenario" disabled><option value="presentation">Загрузка сценариев…</option></select>
+          <div class="prompt-box"><span class="eyebrow">ВАШЕ ЗАДАНИЕ</span><p id="scenario-prompt" aria-live="polite">Загружаем задание…</p></div>
+          <div class="button-row"><button id="speak-prompt" type="button" class="secondary" disabled>Озвучить задание <span aria-hidden="true">▷</span></button><button id="stop-speech" type="button" class="quiet" disabled>Остановить голос</button></div>
+          <p id="voice-status" class="helper" role="status">Озвучивание средствами браузера. Русский голос зависит от устройства.</p>
+        </div>
+        <div class="recorder-panel">
+          <div class="recorder-heading"><span id="recording-indicator" class="recording-indicator" aria-hidden="true"></span><strong>Ваш ответ</strong><time id="recording-timer" aria-label="Длительность записи" aria-live="off">00:00</time></div>
+          <p id="recording-status" class="helper" role="status">Микрофон выключен. Запись до 10 минут.</p>
+          <label class="consent" for="recognition-consent"><input id="recognition-consent" type="checkbox"><span><strong>Добавлять расшифровку во время записи</strong><span>Необязательно. Разрешаю браузерное распознавание речи: аудио может передаваться сервису поставщика браузера. Язык — русский. По умолчанию выключено.</span></span></label>
+          <p id="recognition-status" class="helper" role="status">Без распознавания можно вставить текст вручную.</p>
+          <p id="interim-transcript" class="interim" aria-live="off" hidden></p>
+          <div class="button-row"><button id="start-recording" type="button">Начать запись <span aria-hidden="true">●</span></button><button id="stop-recording" type="button" class="secondary" disabled>Остановить <span aria-hidden="true">■</span></button></div>
+          <div id="recording-output" class="recording-output" hidden><label for="recording-preview">Прослушайте свой ответ</label><audio id="recording-preview" controls preload="metadata"></audio><a id="download-recording" class="text-link" download>Скачать аудиозапись ↓</a></div>
+          <p class="privacy">Запись остаётся в браузере и исчезнет при перезагрузке страницы. Чтобы сохранить её, скачайте файл. Сервер получает только текст, длительность и сценарий при нажатии «Проанализировать текст».</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid input-grid">
+      <section class="card">
+        <div class="card-title"><h2>Или загрузите готовую запись</h2><span>01</span></div>
+        <label class="drop" for="media"><span class="upload-icon" aria-hidden="true">↥</span><strong>Выберите аудио или видео</strong><span>Локальный просмотр · файл не отправляется на сервер</span><input id="media" type="file" accept="audio/*,video/*"></label>
+        <p id="file-status" role="status">Файл пока не выбран</p>
+        <video id="preview" controls hidden></video>
+        <div class="notice">Готовые записи пока не расшифровываются автоматически. Вставьте их расшифровку в поле справа. Анализ голоса и движений ещё не подключён.</div>
+      </section>
+      <section class="card">
+        <div class="card-title"><h2>Расшифровка ответа</h2><span>02</span></div>
+        <form id="analysis-form">
+          <label for="transcript">Текст выступления</label>
+          <textarea id="transcript" required maxlength="20000" placeholder="Вставьте текст вручную или включите распознавание перед записью…" aria-describedby="transcript-help"></textarea>
+          <p id="transcript-help" class="helper">Проверьте ошибки распознавания перед анализом. Новый распознанный ответ добавляется в конец текста. Если в поле уже был текст, укажите общую длительность вручную.</p>
+          <label for="duration">Длительность ответа, секунды <small>необязательно</small></label>
+          <input id="duration" type="number" min="0" max="86400" step="0.1" placeholder="Например, 60" aria-describedby="duration-source">
+          <p id="duration-source" class="helper">Заполнится из записи или выбранного файла. Можно указать вручную.</p>
+          <button id="submit" type="submit">Проанализировать текст <span aria-hidden="true">↗</span></button>
+          <p class="privacy">Текст обрабатывается сервером проекта и не сохраняется приложением.</p>
+        </form>
+      </section>
+    </div>
+
+    <section id="results" class="card results" hidden aria-live="polite" aria-labelledby="results-title">
+      <div class="card-title"><div><div class="eyebrow" id="result-scenario"></div><h2 id="results-title">Результаты текстового анализа</h2></div><button id="download" type="button" class="secondary">Скачать JSON ↓</button></div>
+      <div id="metrics" class="metrics"></div>
+      <p id="result-method"></p>
+      <div class="recommendations"><h3>Что попробовать в следующем ответе</h3><ol id="recommendations"></ol></div>
+      <div id="limitations" class="notice"></div>
+      <div class="button-row"><button id="speak" type="button">Озвучить результаты <span aria-hidden="true">▷</span></button><button id="stop-report-speech" type="button" class="quiet" disabled>Остановить голос</button></div>
+      <p id="report-voice-status" class="helper" role="status">Рекомендации основаны на правилах анализа текста; генеративная модель не подключена.</p>
+    </section>
+    <p id="error" role="alert"></p>
+
+    <section id="method" class="method">
+      <div class="eyebrow">ПРОЗРАЧНАЯ МЕТОДОЛОГИЯ</div><h2>Каждый вывод должен иметь основание</h2>
+      <div class="method-grid">
+        <article><span>01 / ДОСТУПНО</span><h3>Текст и практика речи</h3><p>Запись с микрофона, озвучивание заданий и распознавание средствами браузера с вашего согласия. Подсчёт слов, уникальных слов и заполнителей пауз, средний темп по длительности.</p></article>
+        <article><span>02 / ПЛАНИРУЕТСЯ</span><h3>Акустические признаки</h3><p>Временные метки, паузы и голосовая активность по аудио. Потребуются модель и оценка качества на выбранных языках.</p></article>
+        <article><span>03 / ПЛАНИРУЕТСЯ</span><h3>Невербальные сигналы</h3><p>Наблюдаемые движения головы и поза с привязкой ко времени. Они не являются доказательством эмоций или намерений человека.</p></article>
+      </div>
+    </section>
+    <footer>dialog / Лаборатория коммуникации <span>Русский · Қазақша и English — в плане</span></footer>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
